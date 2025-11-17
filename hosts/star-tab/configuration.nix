@@ -116,6 +116,7 @@
       parsec-bin
       vagrant
       reaper
+      rnote
     ];
     
   };
