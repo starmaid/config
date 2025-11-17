@@ -20,7 +20,7 @@
   services.thermald.enable = true;
   services.snap.enable = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "star-tab"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -57,6 +57,13 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
+  services.xserver.desktopManager.gnome.extraGSettingsOverridePackages = [ pkgs.mutter ];
+  services.xserver.desktopManager.gnome.extraGSettingsOverrides = ''
+     [org.gnome.mutter]
+     experimental-features=['scale-monitor-framebuffer']
+  '';
+
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -68,7 +75,7 @@
   hardware.sane.enable = true; # enables support for SANE scanners
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -76,7 +83,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
+    jack.enable = true;
 
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
@@ -90,7 +97,7 @@
   users.users.star = {
     isNormalUser = true;
     description = "star";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "dialout"];
     packages = with pkgs; [
     #  thunderbird
       direnv
@@ -108,6 +115,7 @@
       wireguard-ui
       parsec-bin
       vagrant
+      reaper
     ];
     
   };
@@ -150,6 +158,20 @@
       rebuildnix = "nixos-rebuild switch --use-remote-sudo";
     };
 
+  networking.networkmanager.settings = {  
+    "connection-wifi-wlp0s20f3" = {
+      "match-device"="interface-name:wlp0s20f3";
+      "ipv4.route-metric"=30;
+    };
+
+    "connection-eth-enp0s20f0u6" = {
+      "match-device"="interface-name:enp0s20f0u6";
+      "ipv4.route-metric"=50;
+    };
+  };
+
+  #networking.networkmanager.unmanaged = ["enp0s20f0u6"];
+  
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -164,8 +186,8 @@
   # services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 2222 ];
+  networking.firewall.allowedUDPPorts = [ 2222 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
