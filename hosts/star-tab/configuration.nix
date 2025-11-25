@@ -16,6 +16,7 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.systemd-boot.configurationLimit = 6;
 
   services.thermald.enable = true;
   services.snap.enable = true;
@@ -31,7 +32,7 @@
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "Asia/Tokyo";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
