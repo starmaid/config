@@ -32,7 +32,8 @@
   networking.networkmanager.enable = true;
 
   # Set your time zone.
-  time.timeZone = "Asia/Tokyo";
+  time.timeZone = "America/Los_Angeles";
+  #time.timeZone = "Asia/Tokyo";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -118,6 +119,8 @@
       vagrant
       reaper
       rnote
+      vlc
+      drawio
     ];
     
   };
