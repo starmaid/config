@@ -110,7 +110,7 @@
       vscode
       git
       freecad
-      blender-hip
+      blender
       inkscape-with-extensions
       vim
       wireguard-tools
