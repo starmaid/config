@@ -36,6 +36,10 @@
     ];
   };
 
+  systemd.tmpfiles.rules = [
+    "d /mnt/storage 0777 root root -"
+  ];
+
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
