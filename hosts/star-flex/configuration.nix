@@ -42,6 +42,12 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "lock";
+    HandleLidSwitchDocked = "lock";
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 

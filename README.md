@@ -5,8 +5,9 @@ how to get set up
 ```
 nix-shell -p git
 git clone https://github.com/starmaid/config
-ln -sf ~/config/hosts/<this-host>/configuration.nix /etc/nixos/configuration.nix
-ln -sf ~/config/hosts/<this-host>/files /etc/nixos/
+NEWHOSTNAME=star-flex
+sudo ln -sf ~/config/hosts/$NEWHOSTNAME/configuration.nix /etc/nixos/configuration.nix
+sudo ln -sf ~/config/hosts/$NEWHOSTNAME/files /etc/nixos/
 
 nixos-rebuild switch --use-remote-sudo
 ```
