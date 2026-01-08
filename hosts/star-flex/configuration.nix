@@ -42,12 +42,6 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "lock";
-    HandleLidSwitchDocked = "lock";
-  };
-
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -112,6 +106,12 @@
   #  wget
   ];
 
+  services.logind.settings.login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "lock";
+    HandleLidSwitchDocked = "lock";
+  };
+
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia.open = true;  # see the note above
@@ -134,11 +134,6 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-  # wireguard stuff
-  networking.wg-quick.interfaces.wg0.configFile = "/etc/nixos/files/wireguard/wg0.conf";
-  networking.networkmanager.dns = "systemd-resolved";
-  services.resolved.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
