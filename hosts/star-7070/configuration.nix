@@ -24,6 +24,17 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  fileSystems."/mnt/storage" = {
+    device = "/dev/disk/by-uuid/3441c0cc-28f4-460b-bb34-55ea4d2d41e2";
+    fsType = "ext4";
+    options = [ # If you don't have this options attribute, it'll default to "defaults" 
+      # boot options for fstab. Search up fstab mount options you can use
+      "users" # Allows any user to mount and unmount
+      "nofail" # Prevent system from failing if this drive doesn't mount
+      "exec" # Permit execution of binaries and other executable files
+    ];
+  };
+
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
