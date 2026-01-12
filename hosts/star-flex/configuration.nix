@@ -109,7 +109,7 @@
   #  wget
   ];
 
-  services.logind.settings.login = {
+  services.logind.settings.Login = {
     HandleLidSwitch = "suspend";
     HandleLidSwitchExternalPower = "lock";
     HandleLidSwitchDocked = "lock";
