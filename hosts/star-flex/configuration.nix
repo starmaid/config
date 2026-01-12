@@ -42,6 +42,9 @@
     LC_TIME = "en_US.UTF-8";
   };
 
+  # Pen and touch use
+  services.iptsd.config.Touchscreen.DisableOnStylus = true;
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
