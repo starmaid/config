@@ -72,9 +72,20 @@
     variant = "";
   };
 
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
   hardware.sane.enable = true; # enables support for SANE scanners
+
+  services.printing.drivers = [ pkgs.cnijfilter2 ];
+
+  # Accelerometer explicit enable
+  hardware.sensor.iio.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
