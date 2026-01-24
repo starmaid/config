@@ -9,6 +9,7 @@
     [ # Include the results of the hardware scan.
       #<nixos-hardware/microsoft/surface-pro/9>
       /home/star/Documents/nix_dev/nixos-hardware/microsoft/surface-pro/8
+      #/home/star/Documents/nix_dev/test/nixos-hardware/microsoft/surface-pro/9
       ./hardware-configuration.nix
       (import <nix-snapd>).nixosModules.default
     ];
@@ -82,7 +83,7 @@
   services.printing.enable = true;
   hardware.sane.enable = true; # enables support for SANE scanners
 
-  services.printing.drivers = [ pkgs.cnijfilter2 ];
+  services.printing.drivers = [ pkgs.gutenprint ];
 
   # Accelerometer explicit enable
   hardware.sensor.iio.enable = true;
