@@ -53,6 +53,13 @@
 
   services.iptsd.config.Touchscreen.DisableOnStylus = true;
 
+  services.iptsd.config.Contacts = {
+    SizeMin = 0.771;
+    SizeMax = 1.030;
+    AspectMin = 1.005;
+    AspectMax = 1.204;
+  };
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
