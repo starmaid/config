@@ -23,3 +23,9 @@ sudo nixos-rebuild switch
 ```
 
 you may have to login as `root` and passwd any new users you created.)
+
+
+```
+systemctl status docker-wireguard.service
+journalctl -u docker-wireguard.service
+```

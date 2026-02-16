@@ -14,3 +14,6 @@ nixos-rebuild switch --use-remote-sudo
 
 remember you have to get a new conf from your wireguard server.
 
+```
+nix-shell -p nixfmt
+```

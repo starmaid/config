@@ -149,16 +149,16 @@
 
   programs.steam.enable = true;
 
-  # install virtualbox
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "star" ];
-  boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
-  # Minimal configuration for NFS support with Vagrant.
-  services.nfs.server.enable = true;
-  # Add firewall exception for VirtualBox provider 
-  networking.firewall.extraCommands = ''
-    ip46tables -I INPUT 1 -i vboxnet+ -p tcp -m tcp --dport 2049 -j ACCEPT
-  '';
+  ## install virtualbox
+  #virtualisation.virtualbox.host.enable = true;
+  #users.extraGroups.vboxusers.members = [ "star" ];
+  #boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
+  ## Minimal configuration for NFS support with Vagrant.
+  #services.nfs.server.enable = true;
+  ## Add firewall exception for VirtualBox provider 
+  #networking.firewall.extraCommands = ''
+  #  ip46tables -I INPUT 1 -i vboxnet+ -p tcp -m tcp --dport 2049 -j ACCEPT
+  #'';
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

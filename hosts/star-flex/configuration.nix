@@ -132,6 +132,9 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  # Network build stuff
+  # https://discourse.nixos.org/t/how-do-i-get-my-aarch64-linux-machine-to-build-x86-64-linux-extra-platforms-doesnt-seem-to-work/38106
+
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
