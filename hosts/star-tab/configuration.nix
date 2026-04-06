@@ -19,6 +19,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 6;
 
+  hardware.microsoft-surface.kernelVersion = "stable";
+
   services.thermald.enable = true;
   services.snap.enable = true;
 
@@ -208,6 +210,19 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
+
+  nix.distributedBuilds = true;
+  nix.settings.builders-use-substitutes = true;
+
+  nix.buildMachines = [
+    {
+      hostName = "10.13.13.9";
+      sshUser = "remotebuild";
+      sshKey = "/root/.ssh/remotebuild";
+      system = pkgs.stdenv.hostPlatform.system;
+      supportedFeatures = [ "nixos-test" "big-parallel" "kvm" ];
+    }
+  ];
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 2222 ];

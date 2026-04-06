@@ -17,3 +17,9 @@ remember you have to get a new conf from your wireguard server.
 ```
 nix-shell -p nixfmt
 ```
+
+```
+sudo nix-channel --list
+sudo nix-channel --add https://channels.nixos.org/nixos-25.05 nixos
+sudo nix-channel --update
+```

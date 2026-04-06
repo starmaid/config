@@ -134,6 +134,8 @@
 
   # Network build stuff
   # https://discourse.nixos.org/t/how-do-i-get-my-aarch64-linux-machine-to-build-x86-64-linux-extra-platforms-doesnt-seem-to-work/38106
+  # https://discourse.nixos.org/t/setting-up-remote-builder-cross-architecture/32570
+  #boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

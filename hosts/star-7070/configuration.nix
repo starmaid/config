@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./remote-builder.nix
     ];
 
   # Bootloader.
@@ -78,7 +79,6 @@
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [];
   };
-
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
