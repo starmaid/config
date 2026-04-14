@@ -15,7 +15,7 @@
       "ALLOWEDIPS" = "0.0.0.0/0,::/0";
       "INTERNAL_SUBNET" = "10.13.13.0";
       "LOG_CONFS" = "true";
-      "PEERDNS" = "192.168.0.13";
+      "PEERDNS" = "10.13.13.1"; # this is the address that clients will use for DNS aka pihole aka this device
       "PEERS" =
         "starztower,starztab,starzs23,starvpnmark,starzvpnpax,starvpnjune,starz7070,starzvpnlucy,starzvpnbrooke";
       "PERSISTENTKEEPALIVE_PEERS" = "all";

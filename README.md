@@ -23,3 +23,5 @@ sudo nix-channel --list
 sudo nix-channel --add https://channels.nixos.org/nixos-25.05 nixos
 sudo nix-channel --update
 ```
+
+https://nix.dev/tutorials/nixos/distributed-builds-setup.html
