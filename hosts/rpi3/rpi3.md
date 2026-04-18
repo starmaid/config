@@ -6,6 +6,8 @@ Load the image.
 ```
 passwd
 sudo passwd
+
+sudo nixos-generate-config
 ```
 
 now you can modify the config file. Remember to add a user for real.

@@ -70,7 +70,10 @@
     isNormalUser = true;
     description = "star";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
+    packages = with pkgs; [
+      tmux
+      eternal-terminal
+    ];
   };
 
   users.users.fixme = {
@@ -104,7 +107,7 @@
   services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 2022 ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
