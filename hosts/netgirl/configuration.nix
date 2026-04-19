@@ -8,6 +8,9 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./pihole.nix
+      ./wireguard.nix
+      ./ddclient.nix
     ];
 
   # Use the extlinux boot loader. (NixOS wants to enable GRUB by default)
@@ -97,10 +100,11 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+  services.eternal-terminal.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 2022 ];
-  networking.firewall.allowedUDPPorts = [ 2022 ];
+  # networking.firewall.allowedUDPPorts = [ 2022 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
