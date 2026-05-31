@@ -133,6 +133,7 @@
       freecad
       blender
       inkscape-with-extensions
+      krita
       vim
       wireguard-tools
       wireguard-ui

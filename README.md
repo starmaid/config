@@ -25,3 +25,14 @@ sudo nix-channel --update
 ```
 
 https://nix.dev/tutorials/nixos/distributed-builds-setup.html
+
+```
+sudo nixos-rebuild switch --max-jobs 0
+```
+
+update a computer with flakes
+
+```
+sudo nix flake update
+sudo nixos-rebuild switch
+```
