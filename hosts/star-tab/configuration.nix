@@ -75,6 +75,13 @@
      experimental-features=['scale-monitor-framebuffer']
   '';
 
+  fonts.packages = with pkgs; [
+    vt323
+    nerd-fonts.caskaydia-mono
+    nerd-fonts.zed-mono
+    nerd-fonts.bigblue-terminal
+  ];
+
 
   # Configure keymap in X11
   services.xserver.xkb = {
