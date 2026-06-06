@@ -71,6 +71,8 @@
     description = "star";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+      git
+      btop
       tmux
       eternal-terminal
     ];
