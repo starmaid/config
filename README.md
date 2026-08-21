@@ -36,3 +36,19 @@ update a computer with flakes
 sudo nix flake update
 sudo nixos-rebuild switch
 ```
+
+
+```
+sudo nix-env --profile /nix/var/nix/profiles/system --list-generations
+```
+
+rsync -azu --progress star@192.168.0.94:/srv/dev-disk-by-uuid-1af4f3d6-6e2b-44ef-b951-4102146e859c/MainDrive ./MainDrive
+
+
+
+
+## My camera doesnt work
+
+https://github.com/linux-surface/linux-surface/discussions/1354
+
+https://discourse.nixos.org/t/usb-webcam-not-usable-despite-being-detected/70969

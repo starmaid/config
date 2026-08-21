@@ -21,6 +21,17 @@
 
   hardware.microsoft-surface.kernelVersion = "stable";
 
+  boot.extraModulePackages = with config.boot.kernelPackages; [
+    v4l2loopback
+  ];
+  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=1 card_label="OBS Cam" exclusive_caps=1
+  '';
+  security.polkit.enable = true;
+
+  # nix-shell -p usbutils v4l-utils libcamera pciutils cheese
+
   services.thermald.enable = true;
   services.snap.enable = true;
 
@@ -152,6 +163,8 @@
       drawio
       tmux
       eternal-terminal
+      candle
+      godot
     ];
     
   };
@@ -160,6 +173,9 @@
   programs.firefox.enable = true;
 
   programs.steam.enable = true;
+
+  hardware.graphics.enable = true;
+  hardware.graphics.enable32Bit = true;
 
   ## install virtualbox
   #virtualisation.virtualbox.host.enable = true;
@@ -171,6 +187,26 @@
   #networking.firewall.extraCommands = ''
   #  ip46tables -I INPUT 1 -i vboxnet+ -p tcp -m tcp --dport 2049 -j ACCEPT
   #'';
+
+  programs.obs-studio = {
+    enable = true;
+
+    # optional Nvidia hardware acceleration
+    #package = (
+    #  pkgs.obs-studio.override {
+    #    cudaSupport = true;
+    #  }
+    #);
+
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      #obs-backgroundremoval
+      #obs-pipewire-audio-capture
+      #obs-vaapi #optional AMD hardware acceleration
+      obs-gstreamer
+      #obs-vkcapture
+    ];
+  };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -193,6 +229,11 @@
       editconf = "sudo nano /etc/nixos/configuration.nix";
       rebuildnix = "nixos-rebuild switch --use-remote-sudo";
     };
+
+  # Bugfix until https://github.com/NixOS/nixpkgs/pull/507455 merges
+  environment.extraInit = ''
+    export XDG_DATA_DIRS="$XDG_DATA_DIRS:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+  '';
 
   networking.networkmanager.settings = {  
     "connection-wifi-wlp0s20f3" = {
@@ -223,7 +264,7 @@
 
   nix.distributedBuilds = true;
   nix.settings.builders-use-substitutes = true;
-
+  
   nix.buildMachines = [
     {
       hostName = "10.13.13.9";
@@ -244,6 +285,12 @@
   networking.wg-quick.interfaces.wg0.configFile = "/etc/nixos/files/wireguard/wg0.conf";
   networking.networkmanager.dns = "systemd-resolved";
   services.resolved.enable = true;
+
+  # platformio ardiuno
+  services.udev.packages = with pkgs; [ 
+    platformio-core.udev
+    openocd
+  ];
   
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
