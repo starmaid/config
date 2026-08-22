@@ -31,8 +31,15 @@
     nssmdns4 = true;
     openFirewall = true;
   };
-  
-  
+
+  # rgb control
+  services.hardware.openrgb {
+    enable = true;
+    package = pkgs.openrgb-with-all-plugins; 
+    motherboard = "intel"; 
+    startupProfile = "/home/star/.config/OpenRGB/basic.orp";
+  }
+    
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
   
@@ -48,7 +55,7 @@
     # Enable this if you have graphical corruption issues or application crashes after waking
     # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
     # of just the bare essentials.
-    powerManagement.enable = false;
+    powerManagement.enable = true;
 
     # Fine-grained power management. Turns off GPU when not in use.
     # Experimental and only works on modern Nvidia GPUs (Turing or newer).
@@ -60,7 +67,7 @@
     # supported GPUs is at: 
     # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
     # Only available from driver 515.43.04+
-    open = true;
+    open = false;
 
     # Enable the Nvidia settings menu,
 	# accessible via `nvidia-settings`.
@@ -130,7 +137,7 @@
   users.users."star" = {
     isNormalUser = true;
     description = "star";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "plugdev"];
     packages = with pkgs; [
       direnv
       libreoffice
@@ -158,6 +165,8 @@
       godot
     ];
   };
+
+  users.groups.plugdev = {};
   
   # platformio ardiuno
   services.udev.packages = with pkgs; [ 
@@ -200,7 +209,13 @@
   environment.systemPackages = with pkgs; [
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
-    btop
+    (btop.overrideAttrs (oldAttrs: {
+      nativeBuildInputs = [ pkgs.makeWrapper ];
+      postInstall = (oldAttrs.postInstall or "") + ''
+        wrapProgram $out/bin/btop \
+          --prefix LD_LIBRARY_PATH : "/run/opengl-driver/lib"
+      '';
+    }))
   ];
 
   # Bugfix until https://github.com/NixOS/nixpkgs/pull/507455 merges
