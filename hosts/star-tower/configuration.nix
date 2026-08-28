@@ -10,6 +10,10 @@
       ./hardware-configuration.nix
       #./remote-builder.nix
     ];
+  nix.settings = {
+    substituters = [ "https://cache.nixos-cuda.org" ];
+    trusted-public-keys = [ "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=" ];
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -32,13 +36,25 @@
     openFirewall = true;
   };
 
+  # wake on LAN
+  networking = {
+    interfaces = {
+      eno1 = {
+        wakeOnLan.enable = true;
+      };
+    };
+    firewall = {
+      allowedUDPPorts = [ 9 ];
+    };
+  };
+
   # rgb control
-  services.hardware.openrgb {
+  services.hardware.openrgb = {
     enable = true;
     package = pkgs.openrgb-with-all-plugins; 
     motherboard = "intel"; 
     startupProfile = "/home/star/.config/OpenRGB/basic.orp";
-  }
+  };
     
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
@@ -147,7 +163,7 @@
       vscode
       git
       freecad
-      blender
+      (blender.override {config.cudaSupport=true; config.rocmSupport=false;})
       inkscape-with-extensions
       krita
       vim
@@ -163,6 +179,8 @@
       eternal-terminal
       candle
       godot
+      libresprite
+      cudatoolkit
     ];
   };
 
