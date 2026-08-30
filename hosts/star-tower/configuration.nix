@@ -5,11 +5,11 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      #./remote-builder.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    #./remote-builder.nix
+  ];
   nix.settings = {
     substituters = [ "https://cache.nixos-cuda.org" ];
     trusted-public-keys = [ "cache.nixos-cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M=" ];
@@ -29,7 +29,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  
+
   services.avahi = {
     enable = true;
     nssmdns4 = true;
@@ -51,16 +51,16 @@
   # rgb control
   services.hardware.openrgb = {
     enable = true;
-    package = pkgs.openrgb-with-all-plugins; 
-    motherboard = "intel"; 
+    package = pkgs.openrgb-with-all-plugins;
+    motherboard = "intel";
     startupProfile = "/home/star/.config/OpenRGB/basic.orp";
   };
-    
+
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
-  
+
   # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
 
   hardware.nvidia = {
 
@@ -69,7 +69,7 @@
 
     # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
     # Enable this if you have graphical corruption issues or application crashes after waking
-    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead 
+    # up from sleep. This fixes it by saving the entire VRAM memory to /tmp/ instead
     # of just the bare essentials.
     powerManagement.enable = true;
 
@@ -79,20 +79,20 @@
 
     # Use the NVidia open source kernel module (not to be confused with the
     # independent third-party "nouveau" open source driver).
-    # Support is limited to the Turing and later architectures. Full list of 
-    # supported GPUs is at: 
-    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
+    # Support is limited to the Turing and later architectures. Full list of
+    # supported GPUs is at:
+    # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+
     open = false;
 
     # Enable the Nvidia settings menu,
-	# accessible via `nvidia-settings`.
+    # accessible via `nvidia-settings`.
     nvidiaSettings = true;
 
     # Optionally, you may need to select the appropriate driver version for your specific GPU.
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-  
+
   # Set your time zone.
   time.timeZone = "America/Los_Angeles";
 
@@ -129,7 +129,7 @@
   hardware.sane.enable = true; # enables support for SANE scanners
 
   services.printing.drivers = [ pkgs.gutenprint ];
-  
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -153,7 +153,11 @@
   users.users."star" = {
     isNormalUser = true;
     description = "star";
-    extraGroups = [ "networkmanager" "wheel" "plugdev"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "plugdev"
+    ];
     packages = with pkgs; [
       direnv
       libreoffice
@@ -163,7 +167,10 @@
       vscode
       git
       freecad
-      (blender.override {config.cudaSupport=true; config.rocmSupport=false;})
+      (blender.override {
+        config.cudaSupport = true;
+        config.rocmSupport = false;
+      })
       inkscape-with-extensions
       krita
       vim
@@ -184,14 +191,14 @@
     ];
   };
 
-  users.groups.plugdev = {};
-  
+  users.groups.plugdev = { };
+
   # platformio ardiuno
-  services.udev.packages = with pkgs; [ 
+  services.udev.packages = with pkgs; [
     platformio-core.udev
     openocd
   ];
-  
+
   # Install firefox.
   programs.firefox.enable = true;
   programs.steam.enable = true;
@@ -218,15 +225,25 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  
+
   # enable nixos stuff
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
+
+  environment.shellAliases = {
+    vpn-up = "sudo systemctl start wg-quick-wg0.service";
+    vpn-down = "sudo systemctl stop wg-quick-wg0.service";
+    editconf = "sudo nano /etc/nixos/configuration.nix";
+    rebuildnix = "nixos-rebuild switch --use-remote-sudo";
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
     (btop.overrideAttrs (oldAttrs: {
       nativeBuildInputs = [ pkgs.makeWrapper ];
       postInstall = (oldAttrs.postInstall or "") + ''
@@ -250,6 +267,11 @@
   # };
 
   # List services that you want to enable:
+
+  # wireguard stuff
+  networking.wg-quick.interfaces.wg0.configFile = "/etc/nixos/files/wireguard/wg0.conf";
+  networking.networkmanager.dns = "systemd-resolved";
+  services.resolved.enable = true;
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
