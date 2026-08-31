@@ -5,14 +5,14 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      #<nixos-hardware/microsoft/surface-pro/9>
-      /home/star/Documents/nix_dev/nixos-hardware/microsoft/surface-pro/8
-      #/home/star/Documents/nix_dev/test/nixos-hardware/microsoft/surface-pro/9
-      ./hardware-configuration.nix
-      (import <nix-snapd>).nixosModules.default
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    #<nixos-hardware/microsoft/surface-pro/9>
+    /home/star/Documents/nix_dev/nixos-hardware/microsoft/surface-pro/8
+    #/home/star/Documents/nix_dev/test/nixos-hardware/microsoft/surface-pro/9
+    ./hardware-configuration.nix
+    (import <nix-snapd>).nixosModules.default
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -82,8 +82,8 @@
 
   services.desktopManager.gnome.extraGSettingsOverridePackages = [ pkgs.mutter ];
   services.desktopManager.gnome.extraGSettingsOverrides = ''
-     [org.gnome.mutter]
-     experimental-features=['scale-monitor-framebuffer']
+    [org.gnome.mutter]
+    experimental-features=['scale-monitor-framebuffer']
   '';
 
   fonts.packages = with pkgs; [
@@ -92,7 +92,6 @@
     nerd-fonts.zed-mono
     nerd-fonts.bigblue-terminal
   ];
-
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -138,9 +137,13 @@
   users.users.star = {
     isNormalUser = true;
     description = "star";
-    extraGroups = [ "networkmanager" "wheel" "dialout"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "dialout"
+    ];
     packages = with pkgs; [
-    #  thunderbird
+      #  thunderbird
       direnv
       libreoffice
       sunvox
@@ -166,13 +169,15 @@
       candle
       godot
     ];
-    
+
   };
 
   # Install firefox.
   programs.firefox.enable = true;
 
   programs.steam.enable = true;
+
+  hardware.hackrf.enable = true;
 
   hardware.graphics.enable = true;
   hardware.graphics.enable32Bit = true;
@@ -183,7 +188,7 @@
   #boot.kernelParams = [ "kvm.enable_virt_at_load=0" ];
   ## Minimal configuration for NFS support with Vagrant.
   #services.nfs.server.enable = true;
-  ## Add firewall exception for VirtualBox provider 
+  ## Add firewall exception for VirtualBox provider
   #networking.firewall.extraCommands = ''
   #  ip46tables -I INPUT 1 -i vboxnet+ -p tcp -m tcp --dport 2049 -j ACCEPT
   #'';
@@ -212,43 +217,46 @@
   nixpkgs.config.allowUnfree = true;
 
   # enable nixos stuff
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
     btop
     linux-firmware
   ];
 
   environment.shellAliases = {
-      vpn-up = "sudo systemctl start wg-quick-wg0.service";
-      vpn-down = "sudo systemctl stop wg-quick-wg0.service";
-      editconf = "sudo nano /etc/nixos/configuration.nix";
-      rebuildnix = "nixos-rebuild switch --use-remote-sudo";
-    };
+    vpn-up = "sudo systemctl start wg-quick-wg0.service";
+    vpn-down = "sudo systemctl stop wg-quick-wg0.service";
+    editconf = "sudo nano /etc/nixos/configuration.nix";
+    rebuildnix = "nixos-rebuild switch --use-remote-sudo";
+  };
 
   # Bugfix until https://github.com/NixOS/nixpkgs/pull/507455 merges
   environment.extraInit = ''
     export XDG_DATA_DIRS="$XDG_DATA_DIRS:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
   '';
 
-  networking.networkmanager.settings = {  
+  networking.networkmanager.settings = {
     "connection-wifi-wlp0s20f3" = {
-      "match-device"="interface-name:wlp0s20f3";
-      "ipv4.route-metric"=30;
+      "match-device" = "interface-name:wlp0s20f3";
+      "ipv4.route-metric" = 30;
     };
 
     "connection-eth-enp0s20f0u6" = {
-      "match-device"="interface-name:enp0s20f0u6";
-      "ipv4.route-metric"=50;
+      "match-device" = "interface-name:enp0s20f0u6";
+      "ipv4.route-metric" = 50;
     };
   };
 
   #networking.networkmanager.unmanaged = ["enp0s20f0u6"];
-  
+
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -264,14 +272,18 @@
 
   nix.distributedBuilds = true;
   nix.settings.builders-use-substitutes = true;
-  
+
   nix.buildMachines = [
     {
       hostName = "10.13.13.9";
       sshUser = "remotebuild";
       sshKey = "/root/.ssh/remotebuild";
       system = pkgs.stdenv.hostPlatform.system;
-      supportedFeatures = [ "nixos-test" "big-parallel" "kvm" ];
+      supportedFeatures = [
+        "nixos-test"
+        "big-parallel"
+        "kvm"
+      ];
     }
   ];
 
@@ -287,11 +299,11 @@
   services.resolved.enable = true;
 
   # platformio ardiuno
-  services.udev.packages = with pkgs; [ 
+  services.udev.packages = with pkgs; [
     platformio-core.udev
     openocd
   ];
-  
+
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
