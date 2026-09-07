@@ -159,12 +159,12 @@
       "plugdev"
     ];
     packages = with pkgs; [
+      python3
       direnv
       libreoffice
       sunvox
       discord
       pwsafe
-      vscode
       git
       freecad
       (blender.override {
@@ -188,7 +188,14 @@
       godot
       libresprite
       cudatoolkit
+      platformio
+      cura-appimage
     ];
+  };
+
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscode.fhsWithPackages (ps: with ps; [ avrdude platformio ]);
   };
 
   users.groups.plugdev = { };
