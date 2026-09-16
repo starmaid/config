@@ -157,8 +157,10 @@
       "networkmanager"
       "wheel"
       "plugdev"
+      "podman"
     ];
     packages = with pkgs; [
+      nixfmt
       python3
       direnv
       libreoffice
@@ -190,12 +192,46 @@
       cudatoolkit
       platformio
       cura-appimage
+      podman-tui
+      docker-compose
     ];
+  };
+
+  virtualisation.containers = {
+    enable = true;
+
+    registries.search = [ "docker.io" ];
+
+    policy = {
+      default = [ { type = "insecureAcceptAnything"; } ];
+      transports = {
+        docker-daemon = {
+          "" = [ { type = "insecureAcceptAnything"; } ];
+        };
+      };
+    };
+  };
+
+  virtualisation = {
+    podman = {
+      enable = true;
+
+      # Create a `docker` alias for podman, to use it as a drop-in replacement
+      dockerCompat = true;
+
+      # Required for containers under podman-compose to be able to talk to each other.
+      defaultNetwork.settings.dns_enabled = true;
+    };
   };
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode.fhsWithPackages (ps: with ps; [ avrdude platformio ]);
+    package = pkgs.vscode.fhsWithPackages (
+      ps: with ps; [
+        avrdude
+        platformio
+      ]
+    );
   };
 
   users.groups.plugdev = { };
