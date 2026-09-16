@@ -4,12 +4,19 @@
     wgha.url = "github:starmaid/wgha";
     wgha.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { self, nixpkgs, wgha, ... }: {
-    nixosConfigurations.netgirl = nixpkgs.lib.nixosSystem {
-      modules = [
-        ./configuration.nix
-        wgha.nixosModules.aarch64-linux.wgha
-      ];
+  outputs =
+    {
+      self,
+      nixpkgs,
+      wgha,
+      ...
+    }:
+    {
+      nixosConfigurations.netgirl = nixpkgs.lib.nixosSystem {
+        modules = [
+          ./configuration.nix
+          wgha.nixosModules.aarch64-linux.wgha
+        ];
+      };
     };
-  };
 }
