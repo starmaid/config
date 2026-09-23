@@ -2,16 +2,21 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      "${builtins.fetchGit { url = "https://github.com/NixOS/nixos-hardware.git"; }}/apple/t2"
-      "${builtins.fetchGit { url = "https://github.com/GnomedDev/T2FanRD.git"; }}"
-    ];
-}
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    "${builtins.fetchGit { url = "https://github.com/NixOS/nixos-hardware.git"; }}/apple/t2"
+    #"${builtins.fetchGit { url = "https://github.com/GnomedDev/T2FanRD.git"; }}"
+  ];
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -28,7 +33,7 @@
     }))
   ];
 
-  services.t2fanrd.enable = true;
+  #services.t2fanrd.enable = true;
 
   networking.hostName = "star-mbp20"; # Define your hostname.
 
@@ -62,8 +67,6 @@
   };
 
   services.displayManager.defaultSession = "xfce";
-  
-  
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
@@ -83,20 +86,46 @@
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.star = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "sudo" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [
+      "wheel"
+      "sudo"
+    ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       tree
       vscode.fhs
       calibre
+      direnv
+      libreoffice
+      sunvox
+      discord
+      pwsafe
+      vscode
+      git
+      freecad
+      blender
+      inkscape-with-extensions
+      krita
+      vim
+      wireguard-tools
+      wireguard-ui
+      rnote
+      vlc
+      drawio
+      tmux
+      eternal-terminal
     ];
   };
 
   programs.firefox.enable = true;
+  programs.steam.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
@@ -104,6 +133,7 @@
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     git
+    btop
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -113,6 +143,18 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  environment.shellAliases = {
+    vpn-up = "sudo systemctl start wg-quick-wg0.service";
+    vpn-down = "sudo systemctl stop wg-quick-wg0.service";
+    editconf = "sudo nano /etc/nixos/configuration.nix";
+    rebuildnix = "nixos-rebuild switch --use-remote-sudo";
+  };
+
+  # wireguard stuff
+  networking.wg-quick.interfaces.wg0.configFile = "/etc/nixos/files/wireguard/wg0.conf";
+  networking.networkmanager.dns = "systemd-resolved";
+  services.resolved.enable = true;
 
   # List services that you want to enable:
 
@@ -150,4 +192,3 @@
   system.stateVersion = "26.11"; # Did you read the comment?
 
 }
-

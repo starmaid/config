@@ -30,6 +30,12 @@ https://nix.dev/tutorials/nixos/distributed-builds-setup.html
 sudo nixos-rebuild switch --max-jobs 0
 ```
 
+initialize a flakes computer
+
+```
+sudo nixos-rebuild switch --flake /etc/nixos/
+```
+
 update a computer with flakes
 
 ```
