@@ -13,7 +13,12 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    "${builtins.fetchGit { url = "https://github.com/NixOS/nixos-hardware.git"; }}/apple/t2"
+    "${
+      builtins.fetchGit {
+        url = "https://github.com/NixOS/nixos-hardware.git";
+        rev = "06f9ecaea5f64b6ff61cf42cb32f21621c4fa14a";
+      }
+    }/apple/t2"
     #"${builtins.fetchGit { url = "https://github.com/GnomedDev/T2FanRD.git"; }}"
   ];
 
@@ -57,16 +62,16 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  # Enable the X11 windowing system.
-  services.xserver = {
-    enable = true;
-    desktopManager = {
-      xterm.enable = false;
-      xfce.enable = true;
-    };
-  };
+  services.xserver.enable = true;
 
-  services.displayManager.defaultSession = "xfce";
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
+
+  services.desktopManager.gnome.extraGSettingsOverridePackages = [ pkgs.mutter ];
+  services.desktopManager.gnome.extraGSettingsOverrides = ''
+    [org.gnome.mutter]
+    experimental-features=['scale-monitor-framebuffer']
+  '';
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
@@ -82,6 +87,21 @@
   #   enable = true;
   #   pulse.enable = true;
   # };
+
+  # from https://discourse.nixos.org/t/enable-palm-rejection-on-macbook-pro-late-2013/78599
+  services.udev.extraRules = ''
+    ACTION=="add|change", \\
+
+    SUBSYSTEM=="input", \\
+
+    ENV{ID_INPUT_TOUCHPAD}=="1", \\
+
+    ENV{ID_VENDOR_ID}=="05ac", \\
+
+    ENV{ID_MODEL_ID}=="027e", \\
+
+    ENV{ID_INPUT_TOUCHPAD_INTEGRATION}="internal"
+  '';
 
   # Enable touchpad support (enabled default in most desktopManager).
   services.libinput.enable = true;
@@ -99,6 +119,7 @@
       "sudo"
     ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
+      nixfmt
       tree
       vscode.fhs
       calibre
@@ -149,6 +170,23 @@
     vpn-down = "sudo systemctl stop wg-quick-wg0.service";
     editconf = "sudo nano /etc/nixos/configuration.nix";
     rebuildnix = "nixos-rebuild switch --use-remote-sudo";
+  };
+
+  # Bugfix until https://github.com/NixOS/nixpkgs/pull/507455 merges
+  environment.extraInit = ''
+    export XDG_DATA_DIRS="$XDG_DATA_DIRS:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+  '';
+
+  systemd.services.t2-touchbar-sleep-fix = {
+    description = "Reload T2 Touch Bar modules after suspend";
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.kmod}/bin/modprobe -r hid_appletb_kbd hid_appletb_bl appletbdrm apple_bce";
+      #ExecStop = "${pkgs.kmod}/bin/modprobe apple_bce appletbdrm hid_appletb_bl hid_appletb_kbd";
+    };
   };
 
   # wireguard stuff
