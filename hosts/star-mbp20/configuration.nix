@@ -6,6 +6,7 @@
   config,
   lib,
   pkgs,
+  t2fanrd,
   ...
 }:
 
@@ -19,7 +20,6 @@
         rev = "06f9ecaea5f64b6ff61cf42cb32f21621c4fa14a";
       }
     }/apple/t2"
-    t2fanrd.nixosModule.t2fanrd
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -30,7 +30,7 @@
   hardware.firmware = [
     (pkgs.stdenvNoCC.mkDerivation (final: {
       name = "brcm-firmware";
-      src = ./firmware/brcm;
+      src = /. + "/home/star/config/hosts/star-mbp20/firmware/brcm";
       installPhase = ''
         mkdir -p $out/lib/firmware/brcm
         cp ${final.src}/* "$out/lib/firmware/brcm"
