@@ -19,7 +19,7 @@
         rev = "06f9ecaea5f64b6ff61cf42cb32f21621c4fa14a";
       }
     }/apple/t2"
-    #"${builtins.fetchGit { url = "https://github.com/GnomedDev/T2FanRD.git"; }}"
+    t2fanrd.nixosModule.t2fanrd
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -38,7 +38,7 @@
     }))
   ];
 
-  #services.t2fanrd.enable = true;
+  services.t2fanrd.enable = true;
 
   networking.hostName = "star-mbp20"; # Define your hostname.
 
@@ -142,6 +142,7 @@
       drawio
       tmux
       eternal-terminal
+      protontricks
     ];
   };
 
