@@ -212,7 +212,7 @@
 
       # After resume: bring it back in dependency order.
       ExecStop = [
-        "${pkgs.coreutils}/bin/sleep 3"
+        "${pkgs.coreutils}/bin/sleep 2"
         "${pkgs.kmod}/bin/modprobe appletbdrm hid_appletb_bl hid_appletb_kbd"
         "${pkgs.systemd}/bin/udevadm settle"
         "${pkgs.systemd}/bin/systemctl restart upower.service"
