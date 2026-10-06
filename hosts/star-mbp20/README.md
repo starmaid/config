@@ -15,7 +15,7 @@ I used ethernet
 now to rebuild the flake i do this 
 
 ```
-sudo nixos-rebuild build --flake /home/star/config/hosts/star-mbp20/ --impure
+sudo nixos-rebuild switch --flake /home/star/config/hosts/star-mbp20/ --impure
 ```
 
 

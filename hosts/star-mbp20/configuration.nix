@@ -39,6 +39,20 @@
   ];
 
   services.t2fanrd.enable = true;
+  services.t2fanrd.config = {
+    Fan1 = {
+      low_temp = 40;
+      high_temp = 70;
+      speed_curve = "linear";
+      always_full_speed = false;
+    };
+    Fan2 = {
+      low_temp = 40;
+      high_temp = 70;
+      speed_curve = "linear";
+      always_full_speed = false;
+    };
+  };
 
   networking.hostName = "star-mbp20"; # Define your hostname.
 
@@ -178,15 +192,31 @@
     export XDG_DATA_DIRS="$XDG_DATA_DIRS:${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
   '';
 
+  # touchbar buttons to control kbd backlight don't work after sleep
   systemd.services.t2-touchbar-sleep-fix = {
     description = "Reload T2 Touch Bar modules after suspend";
+
     wantedBy = [ "sleep.target" ];
     before = [ "sleep.target" ];
+
+    unitConfig = {
+      StopWhenUnneeded = true;
+    };
+
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = "${pkgs.kmod}/bin/modprobe -r hid_appletb_kbd hid_appletb_bl appletbdrm apple_bce";
-      #ExecStop = "${pkgs.kmod}/bin/modprobe apple_bce appletbdrm hid_appletb_bl hid_appletb_kbd";
+
+      # Before suspend: remove the T2 Touch Bar stack.
+      ExecStart = "${pkgs.kmod}/bin/modprobe -r hid_appletb_kbd hid_appletb_bl appletbdrm";
+
+      # After resume: bring it back in dependency order.
+      ExecStop = [
+        "${pkgs.coreutils}/bin/sleep 3"
+        "${pkgs.kmod}/bin/modprobe appletbdrm hid_appletb_bl hid_appletb_kbd"
+        "${pkgs.systemd}/bin/udevadm settle"
+        "${pkgs.systemd}/bin/systemctl restart upower.service"
+      ];
     };
   };
 
