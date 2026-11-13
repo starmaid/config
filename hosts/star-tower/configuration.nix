@@ -194,6 +194,7 @@
       cura-appimage
       podman-tui
       docker-compose
+      vscode.fhs
     ];
   };
 
@@ -222,16 +223,6 @@
       # Required for containers under podman-compose to be able to talk to each other.
       defaultNetwork.settings.dns_enabled = true;
     };
-  };
-
-  programs.vscode = {
-    enable = true;
-    package = pkgs.vscode.fhsWithPackages (
-      ps: with ps; [
-        avrdude
-        platformio
-      ]
-    );
   };
 
   users.groups.plugdev = { };
