@@ -183,6 +183,8 @@
       reaper
       rnote
       vlc
+      audacity
+      ffmpeg
       drawio
       tmux
       eternal-terminal
