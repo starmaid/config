@@ -6,6 +6,7 @@
   config,
   lib,
   pkgs,
+  libfreenect,
   t2fanrd,
   ...
 }:
@@ -102,6 +103,8 @@
   #   pulse.enable = true;
   # };
 
+  services.udev.packages = [ libfreenect ];
+
   # from https://discourse.nixos.org/t/enable-palm-rejection-on-macbook-pro-late-2013/78599
   services.udev.extraRules = ''
     ACTION=="add|change", \\
@@ -131,6 +134,8 @@
     extraGroups = [
       "wheel"
       "sudo"
+      "video"
+      "dialout"
     ]; # Enable ‘sudo’ for the user.
     packages = with pkgs; [
       nixfmt
