@@ -88,6 +88,18 @@
     experimental-features=['scale-monitor-framebuffer']
   '';
 
+  # todo: ly doesnt work well with gnome. but this looks cool
+  # services.displayManager.ly = {
+  #     enable = true;
+  #     settings = {
+  #       clear_password = true;
+  #       big_clock = "en";
+  #       animation = "dur_file";
+  #       dur_file_path = "/home/star/config/hosts/star-mbp20/files/dur/blackhole-smooth-240x67.dur";
+  #       full_color = true;
+  #     };
+  #   };
+
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
   # services.xserver.xkb.options = "eurosign:e,caps:escape";
